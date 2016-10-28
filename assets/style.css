@@ -1,0 +1,9 @@
+.popup{
+    display: none;
+    position: absolute;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+}

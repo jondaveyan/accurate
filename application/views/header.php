@@ -5,5 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <title>Accurate group</title>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 <body>

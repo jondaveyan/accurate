@@ -18,12 +18,46 @@ class Products extends CI_Controller {
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
+    function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
     public function index()
     {
-        $this->load->view('products');
+        $query = $this->db->get('products');
+        $products = $query->result();
+        $data = array('products' => $products);
+        $this->load->view('products', $data);
     }
-    public function add_product()
+    public function new_product()
     {
-        die("ok");
+        $data = array(
+            'name' => $this->input->post('name') ,
+            'quantity' => $this->input->post('quantity') ,
+            'new_quantity' => $this->input->post('new_quantity'),
+            'type' => $this->input->post('type'),
+            'state' => $this->input->post('state')
+        );
+        $this->db->insert('products', $data);
+        redirect('products');
+    }
+    public function edit_product($id)
+    {
+        $data = array(
+            'name' => $this->input->post('name') ,
+            'quantity' => $this->input->post('quantity') ,
+            'new_quantity' => $this->input->post('new_quantity'),
+            'type' => $this->input->post('type'),
+            'state' => $this->input->post('state')
+        );
+        $this->db->where('id', $id);
+        $this->db->update('products', $data);
+        redirect('products');
+    }
+    public function get_product_details($id)
+    {
+        $query = $this->db->get_where('products', array('id' => $id));
+        echo json_encode(array('data' => $query->result()));
     }
 }
