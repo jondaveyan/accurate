@@ -37,7 +37,8 @@ class Products extends CI_Controller {
             'quantity' => $this->input->post('quantity') ,
             'new_quantity' => $this->input->post('new_quantity'),
             'type' => $this->input->post('type'),
-            'state' => $this->input->post('state')
+            'bad_quantity' => $this->input->post('bad_quantity'),
+            'useless_quantity' => $this->input->post('useless_quantity')
         );
         $this->db->insert('products', $data);
         redirect('products');
@@ -49,7 +50,8 @@ class Products extends CI_Controller {
             'quantity' => $this->input->post('quantity') ,
             'new_quantity' => $this->input->post('new_quantity'),
             'type' => $this->input->post('type'),
-            'state' => $this->input->post('state')
+            'bad_quantity' => $this->input->post('bad_quantity'),
+            'useless_quantity' => $this->input->post('useless_quantity')
         );
         $this->db->where('id', $id);
         $this->db->update('products', $data);
