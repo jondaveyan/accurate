@@ -3,6 +3,21 @@
  */
 $(document).ready(function(){
 
+    //dashboard
+    $(document).on('click', '.daily_order', function(){
+        var el = $(this);
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_product_client_table/'+el.data('id'),
+            success: function(data) {
+                $('#product_client_popup').html(data.data);
+                $('#product_client_popup').show();
+            }
+        });
+    })
+
+
     //products
     $(document).on('click', '#new_product', function(){
         $('#new_product_popup').show();
@@ -139,7 +154,7 @@ $(document).ready(function(){
             success: function(data) {
                 var product = data.data[0];
                 $('#product_type').text(product.type);
-                $('#product_quantity').attr('max' ,product.quantity);
+                $('#product_quantity').attr('max' ,(product.quantity-product.daily_order));
                 if(parseInt($('#product_quantity').val()) > product.quantity)
                 {
                     $('#product_quantity').val(product.quantity);

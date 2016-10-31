@@ -28,7 +28,7 @@
             ?>
         </select><br>
         Product Quantity:<br>
-        <input id="product_quantity" type="number" step="0.001" max="<?php echo $products[0]->quantity; ?>" name="product_quantity" />
+        <input id="product_quantity" type="number" step="0.001" max="<?php echo $products[0]->quantity-$products[0]->daily_order; ?>" name="product_quantity" />
         <span id="product_type"><?php echo $products[0]->type; ?></span><br>
         Daily:
         <input id="daily" type="checkbox" name="daily" checked/>

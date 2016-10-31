@@ -48,22 +48,43 @@ class Orders extends CI_Controller {
         {
             $client_id = $this->input->post('client_to_pick');
         }
+        $daily_sale = "sale";
         if($this->input->post('daily'))
         {
             $sale_price = 0;
+            $daily_sale = "daily";
             $daily_price = $this->input->post('product_price');
+            $this->db->where('id', $this->input->post('product_to_pick'));
+            $this->db->select('daily_order');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $daily_order = $query->result();
+            $daily_order = intval($daily_order[0]->daily_order);
+            $new_daily_order = $daily_order + $this->input->post('product_quantity');
+            $this->db->where('id', $this->input->post('product_to_pick'));
+            $this->db->update('products', array('daily_order' => $new_daily_order));
         }
         else
         {
             $daily_price = 0;
             $sale_price = $this->input->post('product_price');
+            $this->db->where('id', $this->input->post('product_to_pick'));
+            $this->db->select('quantity');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $quantity = $query->result();
+            $quantity = intval($quantity[0]->quantity);
+            $new_quantity = $quantity - $this->input->post('product_quantity');
+            $this->db->where('id', $this->input->post('product_to_pick'));
+            $this->db->update('products', array('quantity' => $new_quantity));
         }
         $data = array(
             'client_id' => $client_id ,
             'product_id' => $this->input->post('product_to_pick') ,
             'product_quantity' => $this->input->post('product_quantity'),
             'sale_price' => $sale_price,
-            'daily_price' => $daily_price
+            'daily_price' => $daily_price,
+            'daily_sale' => $daily_sale
         );
         $this->db->insert('orders', $data);
         redirect('orders');

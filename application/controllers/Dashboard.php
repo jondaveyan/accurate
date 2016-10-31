@@ -18,8 +18,46 @@ class Dashboard extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+
+	function __construct() {
+		parent::__construct();
+		$this->load->database();
+	}
+
 	public function index()
 	{
-		$this->load->view('dashboard');
+		$query = $this->db->get('products');
+		$products = $query->result();
+		$this->db->where('orders.daily_sale', 'daily');
+		$this->db->select('clients.name as client_name,clients.id as client_id, products.name as product_name, orders.product_quantity');
+		$this->db->from('orders');
+		$this->db->join('products', 'products.id = orders.product_id');
+		$this->db->join('clients', 'clients.id = orders.client_id');
+		$query = $this->db->get();
+		$data = $query->result();//var_dump($data);
+		$clients = array();
+		$client_ids = array();
+		foreach($data as $key => $val)
+		{
+			if(!in_array($val->client_name, $clients))
+			{
+				$clients[] = $val->client_name;
+				$client_ids[] = $val->client_id;
+			}
+		}
+		$res = array();
+		foreach($data as $key => $value)
+		{
+			if(isset($res[$value->product_name][$value->client_name]))
+			{
+				$res[$value->product_name][$value->client_name] += intval($value->product_quantity);
+			}
+			else
+			{
+				$res[$value->product_name][$value->client_name] = intval($value->product_quantity);
+			}
+		}
+		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
+		$this->load->view('dashboard', $data);
 	}
 }
