@@ -40,7 +40,7 @@
         </div>
 
         <input type="submit" value="submit" />
-        <button id="close_new_order">Close</button>
+        <button id="close_new_order">close</button>
     </form>
 </div>
 <div class="orders">

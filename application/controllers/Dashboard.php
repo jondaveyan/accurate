@@ -60,4 +60,19 @@ class Dashboard extends CI_Controller {
 		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
 		$this->load->view('dashboard', $data);
 	}
+
+    public function get_client_info($client_id)
+    {
+        $this->db->select('debt');
+        $this->db->where('id', $client_id);
+        $this->db->from('clients');
+        $debt = $this->db->get()->result();
+        $this->db->where('client_id', $client_id);
+        $orders = $this->get('clients')->result();
+        $order_debt = 0;
+        foreach($orders as $order)
+        {
+            $order_debt += $order->product_quantity * $order->daily_price;
+        }
+    }
 }

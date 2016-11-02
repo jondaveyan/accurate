@@ -9,6 +9,8 @@
 		<a href="<?php echo site_url('products'); ?>"><button>Products</button></a>
 		<a href="<?php echo site_url('clients'); ?>"><button>Clients</button></a>
 		<a href="<?php echo site_url('orders'); ?>"><button>Orders</button></a>
+		<a href="<?php echo site_url('payment'); ?>"><button>Payment</button></a>
+		<a href="<?php echo site_url('giveback'); ?>"><button>Give back</button></a>
 	</div>
 	<br>
 	<div id="products_table">
@@ -22,7 +24,7 @@
 				<?php
 				foreach($clients as $key => $client)
 				{
-					echo '<th data-client_id="'.$client_ids[$key].'" class="clickable">'.$client.'</th>';
+					echo '<th data-client_id="'.$client_ids[$key].'" class="clickable client_info">'.$client.'</th>';
 				}
 				echo '</tr>';
 				foreach($products as $key => $product)

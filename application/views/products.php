@@ -14,7 +14,7 @@
         Useless Products Quantity:<br>
         <input type="number" step="1" name="useless_quantity" /><br>
         <input type="submit" value="submit" />
-        <button id="close_new_product">Close</button>
+        <button id="close_new_product">close</button>
     </form>
 </div>
 <div class="popup" id="edit_product_popup">
@@ -41,7 +41,7 @@
         Useless Products Quantity:<br>
         <input id="edit_useless_quantity" type="number" step="1" name="useless_quantity" value="<?php echo $products[0]->useless_quantity; ?>"/><br>
         <input type="submit" value="submit" />
-        <button id="close_edit_product">Close</button>
+        <button id="close_edit_product">close</button>
     </form>
 </div>
 <div class="products">

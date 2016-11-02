@@ -17,6 +17,37 @@ $(document).ready(function(){
         });
     })
 
+    $(document).on('click', '.client_info', function(){
+        var el = $(this);
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_client_info/'+el.data('client_id'),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    })
+
+
+    //giveback
+    $(document).on('click', '#new_giveback', function(){
+        $('#new_giveback_popup').show();
+    });
+    $(document).on('click', '#close_new_giveback', function(event){
+        event.preventDefault();
+        $('#new_giveback_popup').hide();
+    });
+
+    //payment
+    $(document).on('click', '#new_payment', function(){
+        $('#new_payment_popup').show();
+    });
+    $(document).on('click', '#close_new_payment', function(event){
+        event.preventDefault();
+        $('#new_payment_popup').hide();
+    });
+
 
     //products
     $(document).on('click', '#new_product', function(){

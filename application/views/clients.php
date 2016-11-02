@@ -29,7 +29,7 @@
         Debt:<br>
         <input id="edit_debt" type="number" step="0.001" name="debt" value="<?php echo $clients[0]->debt; ?>"/><br>
         <input type="submit" value="submit" />
-        <button id="close_edit_client">Close</button>
+        <button id="close_edit_client">close</button>
     </form>
 </div>
 <div class="clients">

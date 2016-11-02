@@ -84,7 +84,8 @@ class Orders extends CI_Controller {
             'product_quantity' => $this->input->post('product_quantity'),
             'sale_price' => $sale_price,
             'daily_price' => $daily_price,
-            'daily_sale' => $daily_sale
+            'daily_sale' => $daily_sale,
+            'date' => date('Y-m-d')
         );
         $this->db->insert('orders', $data);
         redirect('orders');
