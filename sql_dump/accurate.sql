@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Ноя 02 2016 г., 21:55
+-- Время создания: Ноя 03 2016 г., 21:26
 -- Версия сервера: 5.6.16
 -- Версия PHP: 5.5.9
 
@@ -60,14 +60,15 @@ CREATE TABLE IF NOT EXISTS `giveback` (
   `quantity` float NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Дамп данных таблицы `giveback`
 --
 
 INSERT INTO `giveback` (`id`, `client_id`, `product_id`, `quantity`, `date`) VALUES
-(1, 7, 5, 10, '2016-11-01');
+(1, 7, 5, 10, '2016-11-01'),
+(2, 1, 3, 1, '2016-11-03');
 
 -- --------------------------------------------------------
 
@@ -85,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `daily_sale` enum('daily','sale','','') NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
 -- Дамп данных таблицы `orders`
@@ -108,11 +109,13 @@ INSERT INTO `orders` (`id`, `client_id`, `product_id`, `product_quantity`, `sale
 (14, 1, 1, 4, 0, 44, 'daily', '2016-11-01'),
 (15, 6, 1, 10, 0, 333, 'daily', '2016-11-01'),
 (16, 6, 4, 1, 0, 11, 'daily', '2016-11-01'),
-(17, 7, 5, 50, 0, 10000, 'daily', '2016-11-01'),
+(17, 7, 5, 50, 0, 100, 'daily', '2016-11-01'),
 (18, 1, 5, 10, 11, 0, 'sale', '2016-11-01'),
 (19, 1, 5, 10, 0, 11, 'daily', '2016-11-01'),
 (20, 1, 5, 10, 11, 0, 'sale', '2016-11-01'),
-(21, 7, 4, 12, 0, 1220, 'daily', '2016-11-01');
+(21, 7, 4, 10, 0, 50, 'daily', '2016-11-01'),
+(22, 7, 5, 5, 100, 0, 'sale', '2016-11-03'),
+(23, 7, 5, 1, 0, 1000, 'daily', '2016-11-03');
 
 -- --------------------------------------------------------
 
@@ -134,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
 
 INSERT INTO `payment` (`id`, `client_id`, `amount`, `date`) VALUES
 (1, 1, 1000, '2016-11-01'),
-(2, 7, 150000, '2016-11-01');
+(2, 7, 1000, '2016-11-01');
 
 -- --------------------------------------------------------
 
@@ -163,7 +166,7 @@ INSERT INTO `products` (`id`, `name`, `quantity`, `type`, `new_quantity`, `bad_q
 (2, 'test2', 44, 'test2', 2, 0, 0, 15),
 (3, 'test3', 34, 'test3', 3, 1, 0, 4),
 (4, 'henak200360', 100, 'hat', 3, 0, 0, 42),
-(5, 'heraxos', 90, 'hat', 10, 0, 0, 60);
+(5, 'heraxos', 85, 'hat', 10, 0, 0, 61);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

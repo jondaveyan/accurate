@@ -39,11 +39,11 @@
 						{
 							if(isset($res[$product->name][$client]))
 							{
-								echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable">'.$res[$product->name][$client].'</td>';
+								echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable product_client_info">'.$res[$product->name][$client].'</td>';
 							}
 							else
 							{
-								echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable"></td>';
+								echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable product_client_info"></td>';
 							}
 						}
 					}
@@ -51,7 +51,7 @@
 					{
 						foreach($clients as $k => $client)
 						{
-							echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable"></td>';
+							echo '<td data-client_id="'.$client_ids[$k].'" data-product_id="'.$product->id.'" class="clickable product_client_info"></td>';
 						}
 					}
 					echo '</tr>';

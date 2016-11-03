@@ -17,6 +17,18 @@ $(document).ready(function(){
         });
     })
 
+    $(document).on('click', '.product_client_info', function(){
+        var el = $(this);
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_product_client_info/'+el.data('client_id')+'/'+el.data('product_id'),
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    })
+
     $(document).on('click', '.client_info', function(){
         var el = $(this);
         $.ajax({

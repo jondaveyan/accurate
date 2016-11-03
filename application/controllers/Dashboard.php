@@ -29,12 +29,12 @@ class Dashboard extends CI_Controller {
 		$query = $this->db->get('products');
 		$products = $query->result();
 		$this->db->where('orders.daily_sale', 'daily');
-		$this->db->select('clients.name as client_name,clients.id as client_id, products.name as product_name, orders.product_quantity');
+		$this->db->select('clients.name as client_name,clients.id as client_id,products.id as product_id, products.name as product_name, orders.product_quantity');
 		$this->db->from('orders');
 		$this->db->join('products', 'products.id = orders.product_id');
 		$this->db->join('clients', 'clients.id = orders.client_id');
 		$query = $this->db->get();
-		$data = $query->result();//var_dump($data);
+		$data = $query->result();
 		$clients = array();
 		$client_ids = array();
 		foreach($data as $key => $val)
@@ -46,8 +46,19 @@ class Dashboard extends CI_Controller {
 			}
 		}
 		$res = array();
+        $giveback_quantity = array();
 		foreach($data as $key => $value)
 		{
+            $this->db->where('product_id', $value->product_id);
+            $this->db->where('client_id', $value->client_id);
+            $query = $this->db->get('giveback');
+            $givebacks = $query->result();
+            $giveback_q = 0;
+            foreach($givebacks as $giveback)
+            {
+                 $giveback_q += $giveback->quantity;
+            }
+            $giveback_quantity[$value->product_name][$value->client_name] = $giveback_q;
 			if(isset($res[$value->product_name][$value->client_name]))
 			{
 				$res[$value->product_name][$value->client_name] += intval($value->product_quantity);
@@ -57,22 +68,89 @@ class Dashboard extends CI_Controller {
 				$res[$value->product_name][$value->client_name] = intval($value->product_quantity);
 			}
 		}
+        foreach($res as $key => $value)
+        {
+            foreach($value as $k => $v)
+            {
+                $res[$key][$k] -= $giveback_quantity[$key][$k];
+            }
+        }
 		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
 		$this->load->view('dashboard', $data);
 	}
 
     public function get_client_info($client_id)
     {
-        $this->db->select('debt');
         $this->db->where('id', $client_id);
-        $this->db->from('clients');
-        $debt = $this->db->get()->result();
-        $this->db->where('client_id', $client_id);
-        $orders = $this->get('clients')->result();
-        $order_debt = 0;
-        foreach($orders as $order)
+        $query = $this->db->get('clients');
+        $client = $query->result()[0];
+        if($client->own == "yes")
         {
-            $order_debt += $order->product_quantity * $order->daily_price;
+            echo json_encode(array('result' => "own client"));
         }
+        else
+        {
+            $this->db->select('debt');
+            $this->db->where('id', $client_id);
+            $this->db->from('clients');
+            $debt = $this->db->get()->result();
+            $debt = $debt[0]->debt;
+            $this->db->where('client_id', $client_id);
+            $orders = $this->db->get('orders')->result();
+            $order_debt = 0;
+            foreach($orders as $order)
+            {
+                if($order->daily_sale == "daily")
+                {
+                    $order_debt += intval($order->product_quantity) * intval($order->daily_price);
+                }
+                else
+                {
+                    $order_debt += intval($order->product_quantity) * intval($order->sale_price);
+                }
+            }
+            $this->db->where('client_id', $client_id);
+            $givebacks = $this->db->get('giveback')->result();
+            $giveback_amount = 0;
+            foreach($givebacks as $giveback)
+            {
+                $this->db->where('client_id', $client_id);
+                $this->db->where('product_id', $giveback->product_id);
+                $query = $this->db->get('orders');
+                $product_price = $query->result();
+                $product_price = $product_price[0]->daily_price;
+                $giveback_amount += intval($giveback->quantity) * intval($product_price);
+            }
+            $this->db->where('client_id', $client_id);
+            $query = $this->db->get('payment');
+            $payments = $query->result();
+            $paid = 0;
+            foreach($payments as $payment)
+            {
+                $paid += $payment->amount;
+            }
+
+            $final_debt = $debt + $order_debt - $giveback_amount - $paid;
+
+
+
+            echo json_encode(array('result' => $final_debt, 'payment' => $payments, 'orders' => $orders));
+        }
+    }
+
+    public function get_product_client_info()
+    {
+        $client_id =  $this->uri->segment(3);
+        $product_id =  $this->uri->segment(4);
+
+        $this->db->where('client_id', $client_id);
+        $this->db->where('product_id', $product_id);
+        $orders = $this->db->get('orders')->result();
+
+        $this->db->where('client_id', $client_id);
+        $this->db->where('product_id', $product_id);
+        $givebacks = $this->db->get('giveback')->result();
+
+        echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks));
     }
 }
