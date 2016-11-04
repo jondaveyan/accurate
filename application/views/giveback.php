@@ -22,13 +22,13 @@
         Product Quantity:<br>
         <input type="number" step="0.01" name="product_quantity" /><br>
 
-        <input type="submit" value="submit" />
-        <button id="close_new_giveback">close</button>
+        <input type="submit" value="submit"  class="btn btn-default"/>
+        <button id="close_new_giveback" class="btn btn-default">close</button>
     </form>
 </div>
 <div class="giveback">
-    <button id="new_giveback">return products</button>
-    <a href="dashboard"><button>back</button></a>
+    <button id="new_giveback" class="btn btn-default">return products</button>
+    <a href="welcome"><button class="btn btn-default">back</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>

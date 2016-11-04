@@ -86,7 +86,19 @@ class Dashboard extends CI_Controller {
         $client = $query->result()[0];
         if($client->own == "yes")
         {
-            echo json_encode(array('result' => "own client"));
+			$this->db->where('client_id', $client_id);
+			$this->db->from('orders');
+			$this->db->join('products', 'products.id = orders.product_id');
+			$orders = $this->db->get()->result();
+			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Own Client</h4></div>';
+			$html .= '<div class="modal-body"><div class="col-md-12"><h3>Orders</h3>';
+			foreach($orders as $order)
+			{
+				$html .= '<div class="col-md-12">Product: '.$order->name.' Quantity: '.$order->product_quantity.' Date: '.$order->date.'</div>';
+			}
+			$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+
+            echo json_encode(array('html' => $html));
         }
         else
         {
@@ -96,7 +108,9 @@ class Dashboard extends CI_Controller {
             $debt = $this->db->get()->result();
             $debt = $debt[0]->debt;
             $this->db->where('client_id', $client_id);
-            $orders = $this->db->get('orders')->result();
+			$this->db->from('orders');
+			$this->db->join('products', 'products.id = orders.product_id');
+            $orders = $this->db->get()->result();
             $order_debt = 0;
             foreach($orders as $order)
             {
@@ -132,9 +146,27 @@ class Dashboard extends CI_Controller {
 
             $final_debt = $debt + $order_debt - $giveback_amount - $paid;
 
-
-
-            echo json_encode(array('result' => $final_debt, 'payment' => $payments, 'orders' => $orders));
+			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Debt: '.$final_debt.'</h4></div>';
+			$html .= '<div class="modal-body"><div class="col-md-6"><h3>Payments</h3>';
+			foreach($payments as $payment)
+			{
+				$html .= '<div class="col-md-12">Amount: '.$payment->amount.' Date: '.$payment->date.'</div>';
+			}
+			$html .= '</div><div class="col-md-6"><h3>Orders</h3>';
+			foreach($orders as $order)
+			{
+				if($order->daily_sale == 'daily')
+				{
+					$price = $order->daily_price;
+				}
+				else
+				{
+					$price = $order->sale_price;
+				}
+				$html .= '<div class="col-md-12">Product: '.$order->name.' Quantity: '.$order->product_quantity.' Price: '.$price.' Date: '.$order->date.'</div>';
+			}
+			$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+            echo json_encode(array('html' => $html));
         }
     }
 
@@ -151,6 +183,27 @@ class Dashboard extends CI_Controller {
         $this->db->where('product_id', $product_id);
         $givebacks = $this->db->get('giveback')->result();
 
-        echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks));
+		$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Product orders</h4></div>';
+		$html .= '<div class="modal-body"><div class="col-md-6"><h3>Give Back</h3>';
+		foreach($givebacks as $giveback)
+		{
+			$html .= '<div class="col-md-12">Quantity: '.$giveback->quantity.' Date: '.$giveback->date.'</div>';
+		}
+		$html .= '</div><div class="col-md-6"><h3>Orders</h3>';
+		foreach($orders as $order)
+		{
+			if($order->daily_sale == 'daily')
+			{
+				$price = $order->daily_price;
+			}
+			else
+			{
+				$price = $order->sale_price;
+			}
+			$html .= '<div class="col-md-12">Quantity: '.$order->product_quantity.' Price: '.$price.' Date: '.$order->date.'</div>';
+		}
+		$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+
+        echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks, 'html' => $html));
     }
 }

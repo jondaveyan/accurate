@@ -24,7 +24,7 @@ $(document).ready(function(){
             dataType: 'json',
             url: 'dashboard/get_product_client_info/'+el.data('client_id')+'/'+el.data('product_id'),
             success: function(data) {
-                console.log(data);
+                $('#myModal .modal-content').html(data.html);
             }
         });
     })
@@ -36,7 +36,7 @@ $(document).ready(function(){
             dataType: 'json',
             url: 'dashboard/get_client_info/'+el.data('client_id'),
             success: function(data) {
-                console.log(data);
+                $('#myModal .modal-content').html(data.html);
             }
         });
     })

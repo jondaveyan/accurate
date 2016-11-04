@@ -39,13 +39,13 @@
             <input type="number" step="0.001" name="product_price" /><br>
         </div>
 
-        <input type="submit" value="submit" />
-        <button id="close_new_order">close</button>
+        <input type="submit" value="submit" class="btn btn-default"/>
+        <button id="close_new_order" class="btn btn-default">close</button>
     </form>
 </div>
 <div class="orders">
-    <button id="new_order">new order</button>
-    <a href="dashboard"><button>back</button></a>
+    <button id="new_order" class="btn btn-default">new order</button>
+    <a href="welcome"><button class="btn btn-default">back</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>

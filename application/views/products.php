@@ -13,8 +13,8 @@
         <input type="number" step="1" name="bad_quantity" /><br>
         Useless Products Quantity:<br>
         <input type="number" step="1" name="useless_quantity" /><br>
-        <input type="submit" value="submit" />
-        <button id="close_new_product">close</button>
+        <input type="submit" value="submit" class="btn btn-default"/>
+        <button id="close_new_product" class="btn btn-default">close</button>
     </form>
 </div>
 <div class="popup" id="edit_product_popup">
@@ -45,9 +45,9 @@
     </form>
 </div>
 <div class="products">
-    <button id="new_product">new product</button>
-    <button id="edit_product">edit product</button>
-    <a href="dashboard"><button>back</button></a>
+    <button id="new_product" class="btn btn-default">new product</button>
+    <button id="edit_product" class="btn btn-default">edit product</button>
+    <a href="welcome"><button class="btn btn-default">back</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>

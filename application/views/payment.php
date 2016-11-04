@@ -13,13 +13,13 @@
         Amount:<br>
         <input type="number" step="1" name="amount" /><br>
 
-        <input type="submit" value="submit" />
-        <button id="close_new_payment">close</button>
+        <input type="submit" value="submit" class="btn btn-default" />
+        <button id="close_new_payment" class="btn btn-default">close</button>
     </form>
 </div>
 <div class="payment">
-    <button id="new_payment">new payment</button>
-    <a href="dashboard"><button>back</button></a>
+    <button id="new_payment" class="btn btn-default">new payment</button>
+    <a href="welcome"><button class="btn btn-default">back</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>
