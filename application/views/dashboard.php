@@ -19,9 +19,9 @@
 		</div>
 	</div>
 <div id="container">
-	<a href="welcome"><button class="btn btn-default">back</button></a><br><br>
+	<a href="welcome"><button class="btn btn-default">Հետ</button></a><br><br>
 	<div id="products_table">
-		Products:
+		Ափրանքներ:
 		<table class="table">
 			<tr>
 				<th>Ապրանքի անուն</th>

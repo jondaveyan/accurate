@@ -90,14 +90,14 @@ class Dashboard extends CI_Controller {
 			$this->db->from('orders');
 			$this->db->join('products', 'products.id = orders.product_id');
 			$orders = $this->db->get()->result();
-			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Own Client</h4></div>';
-			$html .= '<div class="modal-body"><div class="col-md-12"><h3>Orders</h3>';
-			$html .= '<table class="table"><th>Product</th><th>Quantity</th><th>Date</th>';
+			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Օբյեկտ</h4></div>';
+			$html .= '<div class="modal-body"><div class="col-md-12"><h3>Գործարքներ</h3>';
+			$html .= '<table class="table"><th>Product</th><th>Quantity</th><th>Ամսաթիվ</th>';
 			foreach($orders as $order)
 			{
 				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$order->date.'</td><tr>';
 			}
-			$html .= '</table></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+			$html .= '</table></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
 
             echo json_encode(array('html' => $html));
         }
@@ -157,15 +157,15 @@ class Dashboard extends CI_Controller {
 
             $final_debt = $debt + $order_debt - $giveback_amount - $paid;
 
-			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Debt: '.$final_debt.' dram</h4></div>';
-			$html .= '<div class="modal-body"><div class="col-md-6"><h3>Payments</h3>';
-			$html .= '<table class="table"><th>Amount</th><th>Date</th>';
+			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Պարտք: '.$final_debt.' դրամ</h4></div>';
+			$html .= '<div class="modal-body"><div class="col-md-6"><h3>Վճարումներ</h3>';
+			$html .= '<table class="table"><th>Գին</th><th>Ամսաթիվ</th>';
 			foreach($payments as $payment)
 			{
 				$html .= '<tr><td>'.$payment->amount.'</td><td>'.$payment->date.'</td></tr>';
 			}
-			$html .= '</table></div><div class="col-md-6"><h3>Orders</h3>';
-			$html .= '<table class="table"><th>Product</th><th>Quantity</th><th>Price</th><th>Date</th>';
+			$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
+			$html .= '<table class="table"><th>Ապրանք</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th>';
 			foreach($orders as $order)
 			{
 				if($order->daily_sale == 'daily')
@@ -178,7 +178,7 @@ class Dashboard extends CI_Controller {
 				}
 				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
 			}
-			$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+			$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
             echo json_encode(array('html' => $html));
         }
     }
@@ -196,15 +196,15 @@ class Dashboard extends CI_Controller {
         $this->db->where('product_id', $product_id);
         $givebacks = $this->db->get('giveback')->result();
 
-		$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Product orders</h4></div>';
-		$html .= '<div class="modal-body"><div class="col-md-6"><h3>Give Back</h3>';
-		$html .= '<table class="table"><th>Quantity</th><th>Date</th>';
+		$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Ապրանքի գործարքներ</h4></div>';
+		$html .= '<div class="modal-body"><div class="col-md-6"><h3>Ապրանքի վերադարձ</h3>';
+		$html .= '<table class="table"><th>Քանակ</th><th>Ամսաթիվ</th>';
 		foreach($givebacks as $giveback)
 		{
 			$html .= '<tr><td>'.$giveback->quantity.'</td><td>'.$giveback->date.'</td></tr>';
 		}
-		$html .= '</table></div><div class="col-md-6"><h3>Orders</h3>';
-		$html .= '<table class="table"><th>Quantity</th><th>Price</th><th>Date</th>';
+		$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
+		$html .= '<table class="table"><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th>';
 		foreach($orders as $order)
 		{
 			if($order->daily_sale == 'daily')
@@ -217,7 +217,7 @@ class Dashboard extends CI_Controller {
 			}
 			$html .= '<tr><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
 		}
-		$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+		$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
 
         echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks, 'html' => $html));
     }

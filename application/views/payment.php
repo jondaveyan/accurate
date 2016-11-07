@@ -1,7 +1,7 @@
 <?php $this->load->view('header'); ?>
 <div class="popup" id="new_payment_popup">
     <form id="new_payment_form" action="payment/new_payment" method="post">
-        Select Client:<br>
+        Ընտրել կլիենտ:<br>
         <select id="client_pays" name="client_to_pick"><br>
             <?php
             foreach($clients as $client)
@@ -10,16 +10,16 @@
             }
             ?>
         </select><br>
-        Amount:<br>
+        Գին:<br>
         <input type="number" step="1" name="amount" /><br>
 
-        <input type="submit" value="submit" class="btn btn-default" />
-        <button id="close_new_payment" class="btn btn-default">close</button>
+        <input type="submit" value="Հաստատել" class="btn btn-default" />
+        <button id="close_new_payment" class="btn btn-default">Փակել</button>
     </form>
 </div>
 <div class="payment">
-    <button id="new_payment" class="btn btn-default">new payment</button>
-    <a href="welcome"><button class="btn btn-default">back</button></a>
+    <button id="new_payment" class="btn btn-default">Նոր վճարում</button>
+    <a href="welcome"><button class="btn btn-default">Հետ</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>

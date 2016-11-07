@@ -28,11 +28,11 @@
             ?>
         </select><br>
         Ապրանքի քանակ:<br>
-        <input id="product_quantity" type="number" step="0.001" max="<?php echo $products[0]->quantity-$products[0]->daily_order; ?>" name="product_quantity" />
+        <input id="product_quantityproduct_quantity" type="number" step="0.001" max="<?php echo $products[0]->quantity-$products[0]->daily_order; ?>" name="product_quantity" />
         <span id="product_type"><?php echo $products[0]->type; ?></span><br>
-        Daily:
+        Վարձակալություն:
         <input id="daily" type="checkbox" name="daily" checked/>
-        Sale:
+        Վաճառք:
         <input id="sale" type="checkbox" name="sale" /><br>
         <div id="product_price" <?php if($clients[0]->own == 'yes') echo 'style="display: none;" data-show="false"'; ?>>
             Ապրանքի գին:<br>

@@ -7,13 +7,13 @@
         <input type="checkbox" name="own" /><br>
         Պարտք:<br>
         <input type="number" step="0.001" name="debt" /><br>
-        <input type="submit" value="submit" class="btn btn-default"/>
-        <button id="close_new_client" class="btn btn-default">Close</button>
+        <input type="submit" value="Հաստատել" class="btn btn-default"/>
+        <button id="close_new_client" class="btn btn-default">Փակել</button>
     </form>
 </div>
 <div class="popup" id="edit_client_popup">
     <form id="edit_client_form" action="clients/edit_client/<?php echo $clients[0]->id; ?>" method="post">
-        Select the client:<br>
+        Ընտրել կլիենտ:<br>
         <select id="client_to_edit"><br>
             <?php
             foreach($clients as $client)
@@ -28,7 +28,7 @@
         <input id="edit_own" <?php if($clients[0]->own == 'yes')echo "checked"; ?> type="checkbox" name="own"/><br>
         Պարտք:<br>
         <input id="edit_debt" type="number" step="0.001" name="debt" value="<?php echo $clients[0]->debt; ?>"/><br>
-        <input type="submit" value="Հաստատել" />
+        <input type="submit" class="btn btn-default" value="Հաստատել" />
         <button id="close_edit_client" class="btn btn-default">Պակել</button>
     </form>
 </div>
