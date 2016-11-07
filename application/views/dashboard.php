@@ -12,7 +12,7 @@
 					<p>Some text in the modal.</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button>
 				</div>
 			</div>
 
@@ -24,10 +24,10 @@
 		Products:
 		<table class="table">
 			<tr>
-				<th>Product name</th>
-				<th>Quantity</th>
-				<th>For use</th>
-				<th>Daily ordered</th>
+				<th>Ապրանքի անուն</th>
+				<th>Քանակ</th>
+				<th>Պիտանի</th>
+				<th>Վարձակալության տված</th>
 				<?php
 				foreach($clients as $key => $client)
 				{

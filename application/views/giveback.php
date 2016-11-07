@@ -1,7 +1,7 @@
 <?php $this->load->view('header'); ?>
 <div class="popup" id="new_giveback_popup">
     <form id="new_giveback_form" action="giveback/new_giveback" method="post">
-        Select Client:<br>
+        Ընտրել կլիենտ:<br>
         <select id="client_gives" name="client_to_pick"><br>
             <?php
             foreach($clients as $client)
@@ -10,7 +10,7 @@
             }
             ?>
         </select><br>
-        Select Product:<br>
+        Ընտրել ապրանք:<br>
         <select id="product_given" name="product_to_pick"><br>
             <?php
             foreach($products as $product)
@@ -19,16 +19,16 @@
             }
             ?>
         </select><br>
-        Product Quantity:<br>
+        Ապրանքի քանակ:<br>
         <input type="number" step="0.01" name="product_quantity" /><br>
 
-        <input type="submit" value="submit"  class="btn btn-default"/>
-        <button id="close_new_giveback" class="btn btn-default">close</button>
+        <input type="submit" value="Հաստատել"  class="btn btn-default"/>
+        <button id="close_new_giveback" class="btn btn-default">Փակել</button>
     </form>
 </div>
 <div class="giveback">
-    <button id="new_giveback" class="btn btn-default">return products</button>
-    <a href="welcome"><button class="btn btn-default">back</button></a>
+    <button id="new_giveback" class="btn btn-default">Ապրանքի վերադարձ</button>
+    <a href="welcome"><button class="btn btn-default">Հետ</button></a>
 </div>
 
 <?php $this->load->view('footer'); ?>

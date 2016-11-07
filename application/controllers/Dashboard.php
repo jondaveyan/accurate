@@ -92,11 +92,12 @@ class Dashboard extends CI_Controller {
 			$orders = $this->db->get()->result();
 			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Own Client</h4></div>';
 			$html .= '<div class="modal-body"><div class="col-md-12"><h3>Orders</h3>';
+			$html .= '<table class="table"><th>Product</th><th>Quantity</th><th>Date</th>';
 			foreach($orders as $order)
 			{
-				$html .= '<div class="col-md-12">Product: '.$order->name.' Quantity: '.$order->product_quantity.' Date: '.$order->date.'</div>';
+				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$order->date.'</td><tr>';
 			}
-			$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+			$html .= '</table></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
 
             echo json_encode(array('html' => $html));
         }
@@ -116,7 +117,12 @@ class Dashboard extends CI_Controller {
             {
                 if($order->daily_sale == "daily")
                 {
-                    $order_debt += intval($order->product_quantity) * intval($order->daily_price);
+					$now = time(); // or your date as well
+					$your_date = strtotime($order->date);
+					$datediff = $now - $your_date;
+
+					$day = floor($datediff / (60 * 60 * 24));
+                    $order_debt += intval($order->product_quantity) * intval($order->daily_price) * $day;
                 }
                 else
                 {
@@ -133,7 +139,12 @@ class Dashboard extends CI_Controller {
                 $query = $this->db->get('orders');
                 $product_price = $query->result();
                 $product_price = $product_price[0]->daily_price;
-                $giveback_amount += intval($giveback->quantity) * intval($product_price);
+				$now = time(); // or your date as well
+				$your_date = strtotime($giveback->date);
+				$datediff = $now - $your_date;
+
+				$day = floor($datediff / (60 * 60 * 24));
+                $giveback_amount += intval($giveback->quantity) * intval($product_price) * $day;
             }
             $this->db->where('client_id', $client_id);
             $query = $this->db->get('payment');
@@ -146,13 +157,15 @@ class Dashboard extends CI_Controller {
 
             $final_debt = $debt + $order_debt - $giveback_amount - $paid;
 
-			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Debt: '.$final_debt.'</h4></div>';
+			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Debt: '.$final_debt.' dram</h4></div>';
 			$html .= '<div class="modal-body"><div class="col-md-6"><h3>Payments</h3>';
+			$html .= '<table class="table"><th>Amount</th><th>Date</th>';
 			foreach($payments as $payment)
 			{
-				$html .= '<div class="col-md-12">Amount: '.$payment->amount.' Date: '.$payment->date.'</div>';
+				$html .= '<tr><td>'.$payment->amount.'</td><td>'.$payment->date.'</td></tr>';
 			}
-			$html .= '</div><div class="col-md-6"><h3>Orders</h3>';
+			$html .= '</table></div><div class="col-md-6"><h3>Orders</h3>';
+			$html .= '<table class="table"><th>Product</th><th>Quantity</th><th>Price</th><th>Date</th>';
 			foreach($orders as $order)
 			{
 				if($order->daily_sale == 'daily')
@@ -163,9 +176,9 @@ class Dashboard extends CI_Controller {
 				{
 					$price = $order->sale_price;
 				}
-				$html .= '<div class="col-md-12">Product: '.$order->name.' Quantity: '.$order->product_quantity.' Price: '.$price.' Date: '.$order->date.'</div>';
+				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
 			}
-			$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+			$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
             echo json_encode(array('html' => $html));
         }
     }
@@ -185,11 +198,13 @@ class Dashboard extends CI_Controller {
 
 		$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Product orders</h4></div>';
 		$html .= '<div class="modal-body"><div class="col-md-6"><h3>Give Back</h3>';
+		$html .= '<table class="table"><th>Quantity</th><th>Date</th>';
 		foreach($givebacks as $giveback)
 		{
-			$html .= '<div class="col-md-12">Quantity: '.$giveback->quantity.' Date: '.$giveback->date.'</div>';
+			$html .= '<tr><td>'.$giveback->quantity.'</td><td>'.$giveback->date.'</td></tr>';
 		}
-		$html .= '</div><div class="col-md-6"><h3>Orders</h3>';
+		$html .= '</table></div><div class="col-md-6"><h3>Orders</h3>';
+		$html .= '<table class="table"><th>Quantity</th><th>Price</th><th>Date</th>';
 		foreach($orders as $order)
 		{
 			if($order->daily_sale == 'daily')
@@ -200,9 +215,9 @@ class Dashboard extends CI_Controller {
 			{
 				$price = $order->sale_price;
 			}
-			$html .= '<div class="col-md-12">Quantity: '.$order->product_quantity.' Price: '.$price.' Date: '.$order->date.'</div>';
+			$html .= '<tr><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
 		}
-		$html .= '</div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
+		$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
 
         echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks, 'html' => $html));
     }

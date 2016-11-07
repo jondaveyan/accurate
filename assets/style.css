@@ -21,3 +21,7 @@
 .modal-footer{
     border-top: none !important;
 }
+
+.col-md-6{
+    padding-left: 0px;
+}
