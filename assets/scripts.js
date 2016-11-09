@@ -41,6 +41,17 @@ $(document).ready(function(){
         });
     })
 
+    $(document).on('click', '.product_info', function(){
+        var el = $(this);
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_product_info/'+el.data('product_id'),
+            success: function(data) {
+                $('#myModal .modal-content').html(data.html);
+            }
+        });
+    })
 
     //giveback
     $(document).on('click', '#new_giveback', function(){

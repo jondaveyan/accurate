@@ -21,7 +21,6 @@
 <div id="container">
 	<a href="welcome"><button class="btn btn-default">Հետ</button></a><br><br>
 	<div id="products_table">
-		Ափրանքներ:
 		<table class="table">
 			<tr>
 				<th>Ապրանքի անուն</th>
@@ -36,10 +35,10 @@
 				echo '</tr>';
 				foreach($products as $key => $product)
 				{
-					echo '<tr><td>'.$product->name.'</td>';
+					echo '<tr><td data-toggle="modal" data-target="#myModal" class="clickable product_info" data-product_id="'.$product->id.'">'.$product->name.'</td>';
 					echo '<td>'.$product->quantity.'</td>';
 					echo '<td>'.($product->quantity-$product->daily_order).'</td>';
-					echo '<td class="daily_order" data-id="'.$product->id.'" class="clickable">'.$product->daily_order.'</td>';
+					echo '<td data-id="'.$product->id.'" class="clickable daily_order">'.$product->daily_order.'</td>';
 					if(isset($res[$product->name]))
 					{
 						foreach($clients as $k => $client)

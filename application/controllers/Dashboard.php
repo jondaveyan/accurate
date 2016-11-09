@@ -165,9 +165,17 @@ class Dashboard extends CI_Controller {
 				$html .= '<tr><td>'.$payment->amount.'</td><td>'.$payment->date.'</td></tr>';
 			}
 			$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
-			$html .= '<table class="table"><th>Ապրանք</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th>';
+			$html .= '<table class="table"><th>Ապրանք</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th><th>Գործարքի տեսակ</th>';
 			foreach($orders as $order)
 			{
+				if($order->daily_sale == 'daily')
+				{
+					$daily_sale = '<td>Օրավարձ</td>';
+				}
+				else
+				{
+					$daily_sale = '<td>Վաճառք</td>';
+				}
 				if($order->daily_sale == 'daily')
 				{
 					$price = $order->daily_price;
@@ -176,7 +184,7 @@ class Dashboard extends CI_Controller {
 				{
 					$price = $order->sale_price;
 				}
-				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
+				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td>'.$daily_sale.'</tr>';
 			}
 			$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
             echo json_encode(array('html' => $html));
@@ -204,9 +212,17 @@ class Dashboard extends CI_Controller {
 			$html .= '<tr><td>'.$giveback->quantity.'</td><td>'.$giveback->date.'</td></tr>';
 		}
 		$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
-		$html .= '<table class="table"><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th>';
+		$html .= '<table class="table"><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th><th>Գործարքի տեսակ</th>';
 		foreach($orders as $order)
 		{
+			if($order->daily_sale == 'daily')
+			{
+				$daily_sale = '<td>Օրավարձ</td>';
+			}
+			else
+			{
+				$daily_sale = '<td>Վաճառք</td>';
+			}
 			if($order->daily_sale == 'daily')
 			{
 				$price = $order->daily_price;
@@ -215,10 +231,56 @@ class Dashboard extends CI_Controller {
 			{
 				$price = $order->sale_price;
 			}
-			$html .= '<tr><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td></tr>';
+			$html .= '<tr><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td>'.$daily_sale.'</tr>';
 		}
 		$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
 
         echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks, 'html' => $html));
     }
+
+	public function get_product_info($product_id)
+	{
+		$this->db->where('product_id', $product_id);
+		$orders = $this->db->get('orders')->result();
+
+		$this->db->where('product_id', $product_id);
+		$givebacks = $this->db->get('giveback')->result();
+
+		$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Ապրանքի գործարքներ</h4></div>';
+		$html .= '<div class="modal-body"><div class="col-md-6"><h3>Ապրանքի վերադարձ</h3>';
+		$html .= '<table class="table"><th>Քանակ</th><th>Ամսաթիվ</th>';
+		foreach($givebacks as $giveback)
+		{
+			$html .= '<tr><td>'.$giveback->quantity.'</td><td>'.$giveback->date.'</td></tr>';
+		}
+		$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
+		$html .= '<table class="table"><th>Կլիենտ</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th><th>Գործարքի տեսակ</th>';
+		foreach($orders as $order)
+		{
+			if($order->daily_sale == 'daily')
+			{
+				$daily_sale = '<td>Օրավարձ</td>';
+			}
+			else
+			{
+				$daily_sale = '<td>Վաճառք</td>';
+			}
+			$this->db->where('id', $order->client_id);
+			$this->db->select('name');
+			$query = $this->db->get('clients');
+			$client_name = $query->result()[0]->name;
+			if($order->daily_sale == 'daily')
+			{
+				$price = $order->daily_price;
+			}
+			else
+			{
+				$price = $order->sale_price;
+			}
+			$html .= '<tr><td>'.$client_name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td>'.$daily_sale.'</tr>';
+		}
+		$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
+
+		echo json_encode(array('orders' => $orders, 'givebacks' => $givebacks, 'html' => $html));
+	}
 }
