@@ -13,6 +13,14 @@
         Գին:<br>
         <input type="number" step="1" name="amount" /><br>
 
+        Ամսաթիվ:
+        <div class="input-group date" data-provide="datepicker">
+            <input type="text" class="form-control datepicker">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+
         <input type="submit" value="Հաստատել" class="btn btn-default" />
         <button id="close_new_payment" class="btn btn-default">Փակել</button>
     </form>

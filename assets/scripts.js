@@ -3,6 +3,12 @@
  */
 $(document).ready(function(){
 
+
+    $('.datepicker').datepicker({
+        "todayHighlight": true,
+        "setDate": new Date(),
+        "autoclose": true
+    });
     //dashboard
     $(document).on('click', '.daily_order', function(){
         var el = $(this);

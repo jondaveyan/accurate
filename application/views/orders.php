@@ -39,6 +39,14 @@
             <input type="number" step="0.001" name="product_price" /><br>
         </div>
 
+        Ամսաթիվ:
+        <div class="input-group date" data-provide="datepicker">
+            <input type="text" class="form-control datepicker">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+
         <input type="submit" value="Հաստատել" class="btn btn-default"/>
         <button id="close_new_order" class="btn btn-default">Փակել</button>
     </form>

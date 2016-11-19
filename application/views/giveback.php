@@ -21,6 +21,13 @@
         </select><br>
         Ապրանքի քանակ:<br>
         <input type="number" step="0.01" name="product_quantity" /><br>
+        Ամսաթիվ:
+        <div class="input-group date" data-provide="datepicker">
+            <input type="text" class="form-control datepicker">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
 
         <input type="submit" value="Հաստատել"  class="btn btn-default"/>
         <button id="close_new_giveback" class="btn btn-default">Փակել</button>

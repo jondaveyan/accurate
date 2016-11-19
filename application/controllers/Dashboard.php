@@ -75,6 +75,7 @@ class Dashboard extends CI_Controller {
                 $res[$key][$k] -= $giveback_quantity[$key][$k];
             }
         }
+
 		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
 		$this->load->view('dashboard', $data);
 	}
