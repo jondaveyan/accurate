@@ -35,9 +35,9 @@ class Payment extends CI_Controller {
         $data = array(
             'client_id' => $this->input->post('client_to_pick'),
             'amount' => $this->input->post('amount'),
-            'date' => date('Y-m-d')
+            'date' => date('Y-m-d', strtotime($this->input->post('date')))
         );
         $this->db->insert('payment', $data);
-        redirect('payment   ');
+        redirect('payment');
     }
 }

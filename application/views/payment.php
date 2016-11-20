@@ -15,7 +15,7 @@
 
         Ամսաթիվ:
         <div class="input-group date" data-provide="datepicker">
-            <input type="text" class="form-control datepicker">
+            <input type="text" class="form-control datepicker" name="date">
             <div class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
             </div>

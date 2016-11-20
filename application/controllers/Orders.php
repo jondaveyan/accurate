@@ -85,9 +85,141 @@ class Orders extends CI_Controller {
             'sale_price' => $sale_price,
             'daily_price' => $daily_price,
             'daily_sale' => $daily_sale,
-            'date' => date('Y-m-d')
+            'date' => date('Y-m-d', strtotime($this->input->post('date')))
         );
         $this->db->insert('orders', $data);
         redirect('orders');
+    }
+
+    public function update_order()
+    {
+        if($this->input->post('type') == 'Օրավարձ')
+        {
+            $sale_price = 0;
+            $daily_sale = "daily";
+            $daily_price = $this->input->post('price');
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->select('daily_order');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $daily_order = $query->result();
+            $daily_order = intval($daily_order[0]->daily_order);
+
+            $this->db->where('id', $this->input->post('id'));
+            $this->db->select('daily_sale, product_quantity');
+            $this->db->from('orders');
+            $query = $this->db->get();
+            $res = $query->result();
+            $d_s = $res[0]->daily_sale;
+            $old_order = intval($res[0]->product_quantity);
+            if($d_s == "daily")
+            {
+                $new_daily_order = $daily_order - $old_order + $this->input->post('quantity');
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->update('products', array('daily_order' => $new_daily_order));
+            }
+            else
+            {
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->select('quantity');
+                $this->db->from('products');
+                $query = $this->db->get();
+                $quantity = $query->result();
+                $quantity = intval($quantity[0]->quantity);
+
+                $new_daily_order = $daily_order + $this->input->post('quantity');
+                $new_quantity = $quantity + $old_order;
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->update('products', array('daily_order' => $new_daily_order, 'quantity' => $new_quantity));
+            }
+        }
+        else
+        {
+            $daily_sale = "sale";
+            $daily_price = 0;
+            $sale_price = $this->input->post('price');
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->select('quantity');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $quantity = $query->result();
+            $quantity = intval($quantity[0]->quantity);
+
+            $this->db->where('id', $this->input->post('id'));
+            $this->db->select('daily_sale, product_quantity');
+            $this->db->from('orders');
+            $query = $this->db->get();
+            $res = $query->result();
+            $d_s = $res[0]->daily_sale;
+            $old_order = intval($res[0]->product_quantity);
+            if($d_s == "sale")
+            {
+                $new_quantity = $quantity + $old_order - $this->input->post('quantity');
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->update('products', array('quantity' => $new_quantity));
+            }
+            else
+            {
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->select('daily_order');
+                $this->db->from('products');
+                $query = $this->db->get();
+                $daily_order = $query->result();
+                $daily_order = intval($daily_order[0]->daily_order);
+
+                $new_daily_order = $daily_order - $old_order;
+                $new_quantity = $quantity - $this->input->post('quantity');
+                $this->db->where('id', $this->input->post('product_id'));
+                $this->db->update('products', array('daily_order' => $new_daily_order, 'quantity' => $new_quantity));
+            }
+        }
+        $data = array(
+            'product_quantity' => $this->input->post('quantity'),
+            'sale_price' => $sale_price,
+            'daily_price' => $daily_price,
+            'daily_sale' => $daily_sale,
+            'date' => date('Y-m-d', strtotime($this->input->post('date')))
+        );
+
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->update('orders', $data);
+    }
+
+    public function delete_order()
+    {
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->select('daily_sale, product_quantity');
+        $this->db->from('orders');
+        $query = $this->db->get();
+        $res = $query->result();
+        $d_s = $res[0]->daily_sale;
+        $old_order = intval($res[0]->product_quantity);
+        if($d_s == "sale")
+        {
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->select('quantity');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $quantity = $query->result();
+            $quantity = intval($quantity[0]->quantity);
+
+            $new_quantity = $quantity + $old_order;
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->update('products', array('quantity' => $new_quantity));
+        }
+        else
+        {
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->select('daily_order');
+            $this->db->from('products');
+            $query = $this->db->get();
+            $daily_order = $query->result();
+            $daily_order = intval($daily_order[0]->daily_order);
+
+            $new_quantity = $daily_order - $old_order;
+            $this->db->where('id', $this->input->post('product_id'));
+            $this->db->update('products', array('daily_order' => $daily_order));
+        }
+        $this->db->delete('orders', array('id' => $this->input->post('id')));
     }
 }

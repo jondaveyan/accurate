@@ -38,7 +38,7 @@ class Giveback extends CI_Controller {
             'client_id' => $this->input->post('client_to_pick'),
             'product_id' => $this->input->post('product_to_pick'),
             'quantity' => $this->input->post('product_quantity'),
-            'date' => date('Y-m-d')
+            'date' => date('Y-m-d', strtotime($this->input->post('date')))
         );
         $this->db->insert('giveback', $data);
         redirect('giveback');

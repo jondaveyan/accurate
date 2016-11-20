@@ -73,9 +73,12 @@ class Dashboard extends CI_Controller {
             foreach($value as $k => $v)
             {
                 $res[$key][$k] -= $giveback_quantity[$key][$k];
+				if($res[$key][$k] == 0)
+				{
+					unset($res[$key][$k]);
+				}
             }
         }
-
 		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
 		$this->load->view('dashboard', $data);
 	}
@@ -109,6 +112,7 @@ class Dashboard extends CI_Controller {
             $this->db->from('clients');
             $debt = $this->db->get()->result();
             $debt = $debt[0]->debt;
+            $this->db->select('orders.id, products.id as product_id, orders.daily_sale, orders.date, orders.product_quantity, orders.daily_price, orders.sale_price, products.name');
             $this->db->where('client_id', $client_id);
 			$this->db->from('orders');
 			$this->db->join('products', 'products.id = orders.product_id');
@@ -159,14 +163,14 @@ class Dashboard extends CI_Controller {
             $final_debt = $debt + $order_debt - $giveback_amount - $paid;
 
 			$html = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Պարտք: '.$final_debt.' դրամ</h4></div>';
-			$html .= '<div class="modal-body"><div class="col-md-6"><h3>Վճարումներ</h3>';
+			$html .= '<div class="modal-body"><div class="col-md-3"><h3>Վճարումներ</h3>';
 			$html .= '<table class="table"><th>Գին</th><th>Ամսաթիվ</th>';
 			foreach($payments as $payment)
 			{
 				$html .= '<tr><td>'.$payment->amount.'</td><td>'.$payment->date.'</td></tr>';
 			}
-			$html .= '</table></div><div class="col-md-6"><h3>Գործարքներ</h3>';
-			$html .= '<table class="table"><th>Ապրանք</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th><th>Գործարքի տեսակ</th>';
+			$html .= '</table></div><div class="col-md-9"><h3>Գործարքներ</h3>';
+			$html .= '<table class="table"><th>Ապրանք</th><th>Քանակ</th><th>Գին</th><th>Ամսաթիվ</th><th>Գործարքի տեսակ</th><th>Գործողություններ</th>';
 			foreach($orders as $order)
 			{
 				if($order->daily_sale == 'daily')
@@ -185,7 +189,7 @@ class Dashboard extends CI_Controller {
 				{
 					$price = $order->sale_price;
 				}
-				$html .= '<tr><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td>'.$daily_sale.'</tr>';
+				$html .= '<tr data-id="'.$order->id.'" data-product_id="'.$order->product_id.'"><td>'.$order->name.'</td><td>'.$order->product_quantity.'</td><td>'.$price.'</td><td>'.$order->date.'</td>'.$daily_sale.'<td><button class="btnEdit btn-default btn-xs">Փոփոխել</button><button class="btnDelete btn-danger btn-xs">Ջնջել</button></td></tr>';
 			}
 			$html .= '</table></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Փակել</button></div>';
             echo json_encode(array('html' => $html));

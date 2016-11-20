@@ -1,8 +1,75 @@
 /**
  * Created by Jon on 10/28/2016.
  */
-$(document).ready(function(){
+function Save(){ var par = $(this).parent().parent();
+    //var tdProduct = par.children("td:nth-child(1)");
+    var tdQuantity = par.children("td:nth-child(2)");
+    var tdPrice = par.children("td:nth-child(3)");
+    var tdDate = par.children("td:nth-child(4)");
+    var tdType = par.children("td:nth-child(5)");
+    var tdButtons = par.children("td:nth-child(6)");
+    var id = par.data('id');
+    var product_id = par.data('product_id');
 
+    //tdProduct.html(tdProduct.children("input[type=text]").val());
+    tdQuantity.html(tdQuantity.children("input[type=text]").val());
+    tdPrice.html(tdPrice.children("input[type=number]").val());
+    tdDate.html(tdDate.children("input[type=text]").val());
+    tdType.html(tdType.children("select").val());
+    tdButtons.html('<button class="btnEdit btn-default btn-xs">Փոփոխել</button><button class="btnDelete btn-danger btn-xs">Ջնջել</button>');
+    $(".btnEdit").bind("click", Edit);
+    $(".btnDelete").bind("click", Delete);
+
+    var result = {'id': id, 'product_id': product_id, 'quantity': tdQuantity.html(), 'price': tdPrice.html(), 'date': tdDate.html(), 'type': tdType.html()};
+
+    $.ajax({
+        method: "post",
+        dataType: 'json',
+        data: result,
+        url: 'orders/update_order',
+        success: function(data) {
+        }
+    });
+};
+
+function Edit(){ var par = $(this).parent().parent();
+    //var tdProduct = par.children("td:nth-child(1)");
+    var tdQuantity = par.children("td:nth-child(2)");
+    var tdPrice = par.children("td:nth-child(3)");
+    var tdDate = par.children("td:nth-child(4)");
+    var tdType = par.children("td:nth-child(5)");
+    var tdButtons = par.children("td:nth-child(6)");
+
+    //tdProduct.html("<input type='text' style='width: 100%;' id='txtProduct' value='"+tdProduct.html()+"'/>");
+    tdQuantity.html("<input type='text' style='width: 100%;' id='txtQuantity' value='"+tdQuantity.html()+"'/>");
+    tdPrice.html("<input type='number' style='width: 100%;' step='0.01' id='txtPrice' value='"+tdPrice.html()+"'/>");
+    tdDate.html("<input type='text' style='width: 100%;' id='txtDate' value='"+tdDate.html()+"'/>");
+    tdType.html("<select style='width: 100%;' id='txtType'><option value='Օրավարձ'>Օրավարձ</option><option value='Վաճառք'>Վաճառք</option>");
+    tdButtons.html('<button class="btnSave btn-info btn-xs">Պահպանել</button>');
+
+    $(".btnSave").bind("click", Save);
+    $(".btnEdit").bind("click", Edit);
+    $(".btnDelete").bind("click", Delete);
+};
+
+function Delete(){
+    var par = $(this).parent().parent();
+    var id = par.data('id');
+    var product_id = par.data('product_id');
+    var result = {'id': id, 'product_id': product_id};
+    par.remove();
+    $.ajax({
+        method: "post",
+        dataType: 'json',
+        data: result,
+        url: 'orders/delete_order',
+        success: function(data) {
+        }
+    });
+};
+
+
+$(document).ready(function(){
 
     $('.datepicker').datepicker({
         "todayHighlight": true,
@@ -43,6 +110,8 @@ $(document).ready(function(){
             url: 'dashboard/get_client_info/'+el.data('client_id'),
             success: function(data) {
                 $('#myModal .modal-content').html(data.html);
+                $(".btnEdit").bind("click", Edit);
+                $(".btnDelete").bind("click", Delete);
             }
         });
     })
