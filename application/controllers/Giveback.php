@@ -43,4 +43,29 @@ class Giveback extends CI_Controller {
         $this->db->insert('giveback', $data);
         redirect('giveback');
     }
+    public function get_client_products($client_id)
+    {
+        $this->db->where('orders.daily_sale', 'daily');
+        $this->db->select('clients.name as client_name,clients.id as client_id,products.id as product_id, products.name as product_name, orders.product_quantity');
+        $this->db->from('orders');
+        $this->db->join('products', 'products.id = orders.product_id');
+        $this->db->join('clients', 'clients.id = orders.client_id');
+        $query = $this->db->get();
+        $data = $query->result();
+        $products = array();
+        foreach($data as $key => $value)
+        {
+            if($value->client_id == $client_id)
+            {
+                $products[$value->product_id] = $value->product_name;
+            }
+        }
+        $products = array_unique($products);
+        $res = '<option selected disabled>Ընտրել</option>';
+        foreach($products as $key => $value)
+        {
+            $res .= '<option value="'.$key.'">'.$value.'</option>';
+        }
+        echo json_encode(array('result' => $res));
+    }
 }

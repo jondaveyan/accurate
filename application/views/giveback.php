@@ -3,6 +3,7 @@
     <form id="new_giveback_form" action="giveback/new_giveback" method="post">
         Ընտրել կլիենտ:<br>
         <select id="client_gives" name="client_to_pick"><br>
+            <option selected disabled>Ընտրել</option>
             <?php
             foreach($clients as $client)
             {
@@ -12,6 +13,7 @@
         </select><br>
         Ընտրել ապրանք:<br>
         <select id="product_given" name="product_to_pick"><br>
+            <option selected disabled>Ընտրել</option>
             <?php
             foreach($products as $product)
             {

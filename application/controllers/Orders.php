@@ -34,60 +34,65 @@ class Orders extends CI_Controller {
     }
     public function new_order()
     {
-        if($this->input->post('new_client'))
+        $post_number = $this->input->post('post_number');
+        $post_number = intval($post_number);
+        for($i = 1; $i <= $post_number; $i++)
         {
+            if($this->input->post('new_client'.$i))
+            {
+                $data = array(
+                    'name' => $this->input->post('new_client_name'.$i) ,
+                    'own' => $this->input->post('own_client'.$i)?'yes':'no' ,
+                    'debt' => 0
+                );
+                $this->db->insert('clients', $data);
+                $client_id = $this->db->insert_id();
+            }
+            else
+            {
+                $client_id = $this->input->post('client_to_pick'.$i);
+            }
+            $daily_sale = "sale";
+            if($this->input->post('daily'.$i))
+            {
+                $sale_price = 0;
+                $daily_sale = "daily";
+                $daily_price = $this->input->post('product_price'.$i);
+                $this->db->where('id', $this->input->post('product_to_pick'.$i));
+                $this->db->select('daily_order');
+                $this->db->from('products');
+                $query = $this->db->get();
+                $daily_order = $query->result();
+                $daily_order = intval($daily_order[0]->daily_order);
+                $new_daily_order = $daily_order + $this->input->post('product_quantity'.$i);
+                $this->db->where('id', $this->input->post('product_to_pick'.$i));
+                $this->db->update('products', array('daily_order' => $new_daily_order));
+            }
+            else
+            {
+                $daily_price = 0;
+                $sale_price = $this->input->post('product_price'.$i);
+                $this->db->where('id', $this->input->post('product_to_pick'.$i));
+                $this->db->select('quantity');
+                $this->db->from('products');
+                $query = $this->db->get();
+                $quantity = $query->result();
+                $quantity = intval($quantity[0]->quantity);
+                $new_quantity = $quantity - $this->input->post('product_quantity'.$i);
+                $this->db->where('id', $this->input->post('product_to_pick'.$i));
+                $this->db->update('products', array('quantity' => $new_quantity));
+            }
             $data = array(
-                'name' => $this->input->post('new_client_name') ,
-                'own' => $this->input->post('own_client')?'yes':'no' ,
-                'debt' => 0
+                'client_id' => $client_id ,
+                'product_id' => $this->input->post('product_to_pick'.$i) ,
+                'product_quantity' => $this->input->post('product_quantity'.$i),
+                'sale_price' => $sale_price,
+                'daily_price' => $daily_price,
+                'daily_sale' => $daily_sale,
+                'date' => date('Y-m-d', strtotime($this->input->post('date'.$i)))
             );
-            $this->db->insert('clients', $data);
-            $client_id = $this->db->insert_id();
+            $this->db->insert('orders', $data);
         }
-        else
-        {
-            $client_id = $this->input->post('client_to_pick');
-        }
-        $daily_sale = "sale";
-        if($this->input->post('daily'))
-        {
-            $sale_price = 0;
-            $daily_sale = "daily";
-            $daily_price = $this->input->post('product_price');
-            $this->db->where('id', $this->input->post('product_to_pick'));
-            $this->db->select('daily_order');
-            $this->db->from('products');
-            $query = $this->db->get();
-            $daily_order = $query->result();
-            $daily_order = intval($daily_order[0]->daily_order);
-            $new_daily_order = $daily_order + $this->input->post('product_quantity');
-            $this->db->where('id', $this->input->post('product_to_pick'));
-            $this->db->update('products', array('daily_order' => $new_daily_order));
-        }
-        else
-        {
-            $daily_price = 0;
-            $sale_price = $this->input->post('product_price');
-            $this->db->where('id', $this->input->post('product_to_pick'));
-            $this->db->select('quantity');
-            $this->db->from('products');
-            $query = $this->db->get();
-            $quantity = $query->result();
-            $quantity = intval($quantity[0]->quantity);
-            $new_quantity = $quantity - $this->input->post('product_quantity');
-            $this->db->where('id', $this->input->post('product_to_pick'));
-            $this->db->update('products', array('quantity' => $new_quantity));
-        }
-        $data = array(
-            'client_id' => $client_id ,
-            'product_id' => $this->input->post('product_to_pick') ,
-            'product_quantity' => $this->input->post('product_quantity'),
-            'sale_price' => $sale_price,
-            'daily_price' => $daily_price,
-            'daily_sale' => $daily_sale,
-            'date' => date('Y-m-d', strtotime($this->input->post('date')))
-        );
-        $this->db->insert('orders', $data);
         redirect('orders');
     }
 

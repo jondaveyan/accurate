@@ -136,6 +136,17 @@ $(document).ready(function(){
         event.preventDefault();
         $('#new_giveback_popup').hide();
     });
+    $(document).on('change', '#client_gives', function(){
+        var client_id = $(this).val();
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'giveback/get_client_products/'+client_id,
+            success: function(data) {
+                $('#product_given').html(data.result);
+            }
+        });
+    })
 
     //payment
     $(document).on('click', '#new_payment', function(){
@@ -222,6 +233,8 @@ $(document).ready(function(){
     })
 
     //orders
+    var formNumber = 1;
+
     $(document).on('click', '#new_order', function(){
         $('#new_order_popup').show();
     });
@@ -229,94 +242,143 @@ $(document).ready(function(){
         event.preventDefault();
         $('#new_order_popup').hide();
     });
-    $(document).on('change', '#new_client_for_order', function(){
-        $('#new_client_name').toggle();
-        if($("#new_client_for_order").is(":checked"))
+    $(document).on('change', '.new_client_for_order', function(){
+        var element = $(this).parent();
+        element.find('.new_client_name').toggle();
+        if(element.is(":checked"))
         {
-            $('#client_to_pick').prop('disabled', 'disabled');
-            $('#product_price').show();
+            element.find('.client_to_pick').prop('disabled', 'disabled');
+            element.find('.product_price').show();
         }
         else
         {
-            $('#client_to_pick').prop('disabled', false);
-            if($('#product_price').attr('data-show') == 'false')
+            element.find('.client_to_pick').prop('disabled', false);
+            if(element.find('.product_price').attr('data-show') == 'false')
             {
-                $('#product_price').hide();
+                element.find('.product_price').hide();
             }
         }
     })
-    $(document).on('change', '#own_client', function(){
-        if($("#own_client").is(":checked"))
+    $(document).on('change', '.own_client', function(){
+        var element = $(this).parent().parent();
+        if($(this).is(":checked"))
         {
-            $('#product_price').hide();
+            element.find('.product_price').hide();
         }
         else
         {
-            $('#product_price').show();
+            element.find('.product_price').show();
         }
     })
-    $(document).on('change', '#sale', function(){
-        if($("#sale").is(":checked"))
+    $(document).on('change', '.sale', function(){
+        var element = $(this).parent();
+        if($(this).is(":checked"))
         {
-            $('#daily').prop('checked', false);
+            element.find('.daily').prop('checked', false);
         }
         else
         {
-            $('#daily').prop('checked', true);
+            element.find('.daily').prop('checked', true);
         }
     })
-    $(document).on('change', '#daily', function(){
-        if($("#daily").is(":checked"))
+    $(document).on('change', '.daily', function(){
+        var element = $(this).parent();
+        if($(this).is(":checked"))
         {
-            $('#sale').prop('checked', false);
+            element.find('.sale').prop('checked', false);
         }
         else
         {
-            $('#sale').prop('checked', true);
+            element.find('.sale').prop('checked', true);
         }
     })
-    $(document).on('change', '#product_to_pick', function(){
+    $(document).on('change', '.product_to_pick', function(){
+        var element = $(this).parent();
         $.ajax({
             method: "get",
             dataType: 'json',
-            url: 'products/get_product_details/'+$('#product_to_pick').val(),
+            url: 'products/get_product_details/'+$(this).val(),
             success: function(data) {
                 var product = data.data[0];
-                $('#product_type').text(product.type);
-                $('#product_quantity').attr('max' ,(product.quantity-product.daily_order));
-                if(parseInt($('#product_quantity').val()) > product.quantity)
+                element.find('.product_type').text(product.type);
+                element.find('.product_quantity').attr('max' ,(product.quantity-product.daily_order));
+                if(parseInt(element.find('.product_quantity').val()) > product.quantity)
                 {
-                    $('#product_quantity').val(product.quantity);
+                    element.find('.product_quantity').val(product.quantity);
                 }
             }
         });
     })
-    $(document).on('change', '#client_to_pick', function(){
+    $(document).on('change', '.client_to_pick', function(){
+        var element = $(this).parent();
         $.ajax({
             method: "get",
             dataType: 'json',
-            url: 'clients/get_client_details/'+$('#client_to_pick').val(),
+            url: 'clients/get_client_details/'+$(this).val(),
             success: function(data) {
                 var client = data.data[0];
                 if(client.own == 'yes')
                 {
-                    $('#edit_own').prop('checked', true);
-                    $('#product_price').hide();
-                    $('#product_price').attr('data-show', 'false');
+                    element.find('.product_price').hide();
+                    element.find('.product_price').attr('data-show', 'false');
                 }
                 else
                 {
-                    $('#product_price').show();
-                    $('#product_price').attr('data-show', 'true');
+                    element.find('.product_price').show();
+                    element.find('.product_price').attr('data-show', 'true');
                 }
             }
         });
     })
-    $(document).on('change', '#product_quantity', function(){
-        var max = $('#product_quantity').attr('max');
-        if(parseInt($('#product_quantity').val()) > max)
+    $(document).on('change', '.product_quantity', function(){
+        var element = $(this);
+        var max = element.attr('max');
+        if(parseInt(element.val()) > max)
         {
-            $('#product_quantity').val(max);
+            element.val(max);
         }
     })
+
+    $(document).on('click', '#add_form', function(event) {
+        event.preventDefault();
+        formNumber++;
+        $('#post_number').val(formNumber);
+        var num = $('#new_order_form .clonedSection').length;
+        var newNum  = num + 1;
+
+        var newSection = $('#clonedSection' + num).clone().attr('id', 'clonedSection' + newNum);
+
+        newSection.find('select[name*="client_to_pick"]').attr('id', 'client_to_pick' + newNum).attr('name', 'client_to_pick' + newNum);
+        newSection.find('input[name*="new_client"]').attr('id', 'new_client_for_order' + newNum).attr('name', 'new_client' + newNum);
+        newSection.find('input[name*="own_client"]').attr('id', 'own_client' + newNum).attr('name', 'own_client' + newNum);
+        newSection.find('input[name*="new_client_name"]').attr('name', 'new_client_name' + newNum);
+        newSection.find('select[name*="product_to_pick"]').attr('id', 'product_to_pick' + newNum).attr('name', 'product_to_pick' + newNum);
+        newSection.find('input[name*="product_quantity"]').attr('id', 'product_quantity' + newNum).attr('name', 'product_quantity' + newNum);
+        newSection.find('input[name*="daily"]').attr('id', 'daily' + newNum).attr('name', 'daily' + newNum);
+        newSection.find('input[name*="sale"]').attr('id', 'sale' + newNum).attr('name', 'sale' + newNum);
+        newSection.find('input[name*="product_price"]').attr('name', 'product_price' + newNum);
+        newSection.find('input[name*="date"]').attr('name', 'date' + newNum);
+        newSection.find('.new_client_name').attr('id', 'new_client_name' + newNum);
+        newSection.find('.product_type').attr('id', 'product_type' + newNum);
+        newSection.find('.product_price').attr('id', 'product_price' + newNum);
+
+        $('.clonedSection').last().after(newSection)
+
+        $('#del_form').removeAttr("disabled");
+    });
+
+    $(document).on('click', '#del_form', function(event) {
+        event.preventDefault();
+        formNumber--;
+        $('#post_number').val(formNumber);
+        var num = $('.clonedSection').length; // how many "duplicatable" input fields we currently have
+        $('#clonedSection' + num).remove();     // remove the last element
+
+        // if only one element remains, disable the "remove" button
+        if (num-1 == 1)
+            $('#del_form').attr('disabled','disabled');
+    });
+
+    $('#del_form').attr('disabled','disabled');
+
 })

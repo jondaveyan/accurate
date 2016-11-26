@@ -79,6 +79,21 @@ class Dashboard extends CI_Controller {
 				}
             }
         }
+		foreach($clients as $key => $client)
+		{
+			$check = true;
+			foreach($res as $element)
+			{
+				if(array_key_exists($client, $element))
+				{
+					$check = false;
+				}
+			}
+			if($check)
+			{
+				unset($clients[$key]);
+			}
+		}
 		$data = array('res' => $res, 'clients' => $clients, 'products' => $products, 'client_ids' => $client_ids);
 		$this->load->view('dashboard', $data);
 	}

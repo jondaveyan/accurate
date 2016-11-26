@@ -8,6 +8,10 @@
     right: 0;
     z-index: 50;
 }
+.order_popup{
+    display: none;
+    margin-top: 10px;
+}
 .table {
     border-collapse: collapse;
 }
@@ -27,4 +31,8 @@
 }
 .modal-dialog{
     width: 90%;
+}
+.clonedSection{
+    border: 1px solid black;
+    padding: 15px;
 }
