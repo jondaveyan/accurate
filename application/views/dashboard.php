@@ -21,7 +21,7 @@
 <div id="container">
 	<a href="welcome"><button class="btn btn-default">Հետ</button></a><br><br>
 	<div id="products_table">
-		<table class="table">
+		<table class="table table-hover">
 			<tr>
 				<th>Ապրանքի անուն</th>
 				<th>Քանակ</th>

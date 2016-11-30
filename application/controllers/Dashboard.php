@@ -26,6 +26,7 @@ class Dashboard extends CI_Controller {
 
 	public function index()
 	{
+		$this->db->order_by("name", "esc");
 		$query = $this->db->get('products');
 		$products = $query->result();
 		$this->db->where('orders.daily_sale', 'daily');
