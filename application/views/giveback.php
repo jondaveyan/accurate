@@ -22,7 +22,11 @@
             ?>
         </select><br>
         Ապրանքի քանակ:<br>
-        <input type="number" step="0.01" name="product_quantity" /><br>
+        <input id="product_q" type="number" step="0.01" name="product_quantity" /><br>
+        Վնասվածների քանակ:<br>
+        <input id="bad_q" type="number" step="0.01" name="bad_quantity" /><br>
+        Ջարդվածների քանակ:<br>
+        <input id="useless_q" type="number" step="0.01" name="useless_quantity" /><br>
         Ամսաթիվ:
         <div class="input-group date" data-provide="datepicker">
             <input type="text" class="form-control datepicker" name="date">

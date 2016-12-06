@@ -12,11 +12,11 @@
     display: none;
     margin-top: 10px;
 }
-.table {
+table {
     border-collapse: collapse;
 }
 
-.table, .table th, .table td {
+td, th{
     border: 1px solid black;
 }
 .clickable{
@@ -35,4 +35,18 @@
 .clonedSection{
     border: 1px solid black;
     padding: 15px;
+}
+th.verticalTableHeader {
+    /* Something you can count on */
+    height: 200px;
+    white-space: nowrap;
+}
+
+th.verticalTableHeader > div {
+    transform:
+        /* Magic Numbers */
+            translate(25px, 51px)
+                /* 45 is really 360 - 45 */
+            rotate(90deg);
+    padding-top: 29px;
 }

@@ -73,14 +73,16 @@ class Orders extends CI_Controller {
                 $daily_price = 0;
                 $sale_price = $this->input->post('product_price'.$i);
                 $this->db->where('id', $this->input->post('product_to_pick'.$i));
-                $this->db->select('quantity');
+                $this->db->select('quantity, sold_quantity');
                 $this->db->from('products');
                 $query = $this->db->get();
                 $quantity = $query->result();
+                $sold = intval($quantity[0]->sold_quantity);
                 $quantity = intval($quantity[0]->quantity);
-                $new_quantity = $quantity - $this->input->post('product_quantity'.$i);
+                $new_quantity = $quantity - intval($this->input->post('product_quantity'.$i));
+                $new_sold = $sold + intval($this->input->post('product_quantity'.$i));
                 $this->db->where('id', $this->input->post('product_to_pick'.$i));
-                $this->db->update('products', array('quantity' => $new_quantity));
+                $this->db->update('products', array('quantity' => $new_quantity, 'sold_quantity' => $new_sold));
             }
             $data = array(
                 'client_id' => $client_id ,
@@ -178,6 +180,41 @@ class Orders extends CI_Controller {
                 $this->db->update('products', array('daily_order' => $new_daily_order, 'quantity' => $new_quantity));
             }
         }
+        $data = array(
+            'product_quantity' => $this->input->post('quantity'),
+            'sale_price' => $sale_price,
+            'daily_price' => $daily_price,
+            'daily_sale' => $daily_sale,
+            'date' => date('Y-m-d', strtotime($this->input->post('date')))
+        );
+
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->update('orders', $data);
+    }
+
+    public function update_order_own()
+    {
+        $sale_price = 0;
+        $daily_price = 0;
+        $daily_sale = "daily";
+        $this->db->where('id', $this->input->post('product_id'));
+        $this->db->select('daily_order');
+        $this->db->from('products');
+        $query = $this->db->get();
+        $daily_order = $query->result();
+        $daily_order = intval($daily_order[0]->daily_order);
+
+        $this->db->where('id', $this->input->post('id'));
+        $this->db->select('product_quantity');
+        $this->db->from('orders');
+        $query = $this->db->get();
+        $res = $query->result();
+        $old_order = intval($res[0]->product_quantity);
+
+        $new_daily_order = $daily_order - $old_order + $this->input->post('quantity');
+        $this->db->where('id', $this->input->post('product_id'));
+        $this->db->update('products', array('daily_order' => $new_daily_order));
+
         $data = array(
             'product_quantity' => $this->input->post('quantity'),
             'sale_price' => $sale_price,

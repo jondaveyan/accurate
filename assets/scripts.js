@@ -69,13 +69,73 @@ function Delete(){
 };
 
 
+function SaveOwn(){ var par = $(this).parent().parent();
+    //var tdProduct = par.children("td:nth-child(1)");
+    var tdQuantity = par.children("td:nth-child(2)");
+    var tdDate = par.children("td:nth-child(3)");
+    var tdButtons = par.children("td:nth-child(4)");
+    var id = par.data('id');
+    var product_id = par.data('product_id');
+
+    //tdProduct.html(tdProduct.children("input[type=text]").val());
+    tdQuantity.html(tdQuantity.children("input[type=text]").val());
+    tdDate.html(tdDate.children("input[type=text]").val());
+    tdButtons.html('<button class="btnEditOwn btn-default btn-xs">Փոփոխել</button><button class="btnDeleteOwn btn-danger btn-xs">Ջնջել</button>');
+    $(".btnEditOwn").bind("click", EditOwn);
+    $(".btnDeleteOwn").bind("click", DeleteOwn);
+
+    var result = {'id': id, 'product_id': product_id, 'quantity': tdQuantity.html(), 'date': tdDate.html()};
+
+    $.ajax({
+        method: "post",
+        dataType: 'json',
+        data: result,
+        url: 'orders/update_order_own',
+        success: function(data) {
+        }
+    });
+};
+
+function EditOwn(){ var par = $(this).parent().parent();
+    //var tdProduct = par.children("td:nth-child(1)");
+    var tdQuantity = par.children("td:nth-child(2)");
+    var tdDate = par.children("td:nth-child(3)");
+    var tdButtons = par.children("td:nth-child(4)");
+
+    //tdProduct.html("<input type='text' style='width: 100%;' id='txtProduct' value='"+tdProduct.html()+"'/>");
+    tdQuantity.html("<input type='text' style='width: 100%;' id='txtQuantity' value='"+tdQuantity.html()+"'/>");
+    tdDate.html("<input type='text' style='width: 100%;' id='txtDate' value='"+tdDate.html()+"'/>");
+    tdButtons.html('<button class="btnSaveOwn btn-info btn-xs">Պահպանել</button>');
+
+    $(".btnSaveOwn").bind("click", SaveOwn);
+    $(".btnEditOwn").bind("click", EditOwn);
+    $(".btnDeleteOwn").bind("click", DeleteOwn);
+};
+
+function DeleteOwn(){
+    var par = $(this).parent().parent();
+    var id = par.data('id');
+    var product_id = par.data('product_id');
+    var result = {'id': id, 'product_id': product_id};
+    par.remove();
+    $.ajax({
+        method: "post",
+        dataType: 'json',
+        data: result,
+        url: 'orders/delete_order',
+        success: function(data) {
+        }
+    });
+};
+
+
 $(document).ready(function(){
 
     $('.datepicker').datepicker({
         "todayHighlight": true,
-        "setDate": new Date(),
         "autoclose": true
     });
+    $('.datepicker').datepicker("setDate", new Date());
     //dashboard
     $(document).on('click', '.daily_order', function(){
         var el = $(this);
@@ -86,6 +146,19 @@ $(document).ready(function(){
             success: function(data) {
                 $('#product_client_popup').html(data.data);
                 $('#product_client_popup').show();
+            }
+        });
+    })
+
+    $(document).on('change', '#debt_date', function(){
+        var date = $(this).val();
+        var client_id = $(this).data('client_id');
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_client_info/?client_id='+client_id+'&date='+date,
+            success: function(data) {
+                $('#client_debt').text('Պարտք: '+data+' դրամ');
             }
         });
     })
@@ -107,11 +180,13 @@ $(document).ready(function(){
         $.ajax({
             method: "get",
             dataType: 'json',
-            url: 'dashboard/get_client_info/'+el.data('client_id'),
+            url: 'dashboard/get_client_info/?client_id='+el.data('client_id'),
             success: function(data) {
                 $('#myModal .modal-content').html(data.html);
                 $(".btnEdit").bind("click", Edit);
                 $(".btnDelete").bind("click", Delete);
+                $(".btnEditOwn").bind("click", EditOwn);
+                $(".btnDeleteOwn").bind("click", DeleteOwn);
             }
         });
     })
@@ -146,6 +221,19 @@ $(document).ready(function(){
                 $('#product_given').html(data.result);
             }
         });
+    })
+
+    $(document).on('change', '#product_given', function(){
+        var quantity = $('#product_given option:selected').data('q');
+        $('#product_q').val(quantity);
+        $("#product_q").data('q',quantity);
+    })
+    $(document).on('change', '#product_q', function(){
+        var quantity = $(this).data('q');
+        if($(this).val() > quantity)
+        {
+            $('#product_q').val(quantity);
+        }
     })
 
     //payment
