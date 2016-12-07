@@ -159,6 +159,32 @@ $(document).ready(function(){
             url: 'dashboard/get_client_info/?client_id='+client_id+'&date='+date,
             success: function(data) {
                 $('#client_debt').text('Պարտք: '+data+' դրամ');
+                $('.datepicker-dropdown').hide();
+            }
+        });
+    })
+
+    $(document).on('change', '#debts_date', function(){
+        var date = $(this).val();
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_debts/?date='+date,
+            success: function(data) {
+                $('#myModal .modal-content').html(data.html);
+                $('.datepicker-dropdown').hide();
+            }
+        });
+    })
+
+    $(document).on('click', '#debts_table', function(){
+        var el = $(this);
+        $.ajax({
+            method: "get",
+            dataType: 'json',
+            url: 'dashboard/get_debts',
+            success: function(data) {
+                $('#myModal .modal-content').html(data.html);
             }
         });
     })

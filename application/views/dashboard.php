@@ -19,7 +19,8 @@
 		</div>
 	</div>
 <div id="container">
-	<a href="welcome"><button class="btn btn-default">Հետ</button></a><br><br>
+	<a href="welcome"><button class="btn btn-default">Հետ</button></a>
+	<button id="debts_table" data-toggle="modal" data-target="#myModal" class="btn btn-default">Պարտքերի աղյուսակ</button><br><br>
 	<div id="products_table">
 		<table>
 			<tr>
