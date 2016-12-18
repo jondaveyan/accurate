@@ -42,11 +42,19 @@ th.verticalTableHeader {
     white-space: nowrap;
 }
 
-th.verticalTableHeader > div {
-    transform:
-        /* Magic Numbers */
-            translate(25px, 51px)
-                /* 45 is really 360 - 45 */
-            rotate(90deg);
-    padding-top: 29px;
+th.verticalTableHeader {
+    vertical-align:middle;
+}
+th.verticalTableHeader {
+    width:1.6em;
+}
+th.verticalTableHeader div {
+    -webkit-transform:rotate(-90deg) translate(-50%, 0);
+    transform:rotate(-90deg) translate(-50%, 0);
+    transform-origin:0 0;
+    -webkit-transform-origin:0 0;
+    position:absolute;
+}
+th{
+    height: 280px;
 }
